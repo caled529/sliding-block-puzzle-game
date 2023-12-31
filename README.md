@@ -3,7 +3,7 @@ A sliding block puzzle game created with pygame.
 
 ## To-do:
 - [ ] Create a basic working version of the game for 3x3 puzzles
-    - [ ] Write a class for the puzzle tiles
+    - [X] Write a class for the puzzle tiles
     - [ ] Write a class for the board to contain the tiles
     - [ ] Write a function to draw the board
     - [ ] Create the event loop to handle mouse events
