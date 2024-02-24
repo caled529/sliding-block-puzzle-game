@@ -4,6 +4,7 @@ from os import environ
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 from puzzle_board import PuzzleBoard
 import pygame as pg
+from sys import argv
 
 
 def gen_image(size: int) -> pg.Surface:
@@ -23,31 +24,27 @@ def draw(target: pg.Surface, board: PuzzleBoard, border_offset: int):
     pg.display.flip()
 
 
-def main():
-    WIN_RES = 640
-    BORDER_OFFSET = 50
+WIN_SIZE = 640
+BORDER_OFFSET = 50
 
-    pg.init()
+pg.init()
 
-    screen = pg.display.set_mode((WIN_RES, WIN_RES))
-    board = PuzzleBoard(4, WIN_RES - 2 * BORDER_OFFSET, gen_image(WIN_RES))
-    running = True
+screen = pg.display.set_mode((WIN_SIZE, WIN_SIZE))
+board = PuzzleBoard(int(argv[1]), WIN_SIZE - 2 * BORDER_OFFSET, gen_image(WIN_SIZE))
+running = True
 
+draw(screen, board, BORDER_OFFSET)
+
+while running:
+    for event in pg.event.get():
+        if event.type == pg.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pg.mouse.get_pos()
+            if mouse_x in range(
+                BORDER_OFFSET, WIN_SIZE - BORDER_OFFSET
+            ) and mouse_y in range(BORDER_OFFSET, WIN_SIZE - BORDER_OFFSET):
+                board.handle_click(mouse_x - BORDER_OFFSET, mouse_y - BORDER_OFFSET)
+        if event.type == pg.QUIT or event.type == pg.KSCAN_ESCAPE:
+            running = False
     draw(screen, board, BORDER_OFFSET)
 
-    while running:
-        for event in pg.event.get():
-            if event.type == pg.MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = pg.mouse.get_pos()
-                if mouse_x in range(
-                    BORDER_OFFSET, WIN_RES - BORDER_OFFSET
-                ) and mouse_y in range(BORDER_OFFSET, WIN_RES - BORDER_OFFSET):
-                    board.handle_click(mouse_x - BORDER_OFFSET, mouse_y - BORDER_OFFSET)
-            if event.type == pg.QUIT or event.type == pg.KSCAN_ESCAPE:
-                running = False
-        draw(screen, board, BORDER_OFFSET)
-
-    pg.quit()
-
-
-main()
+pg.quit()
